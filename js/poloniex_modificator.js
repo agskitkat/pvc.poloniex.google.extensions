@@ -93,7 +93,10 @@ Variables:
 $(".cols .col.sellCol .head .linkContainer").html("<button class='theButton' href='#' id='ShivaTradeInc_autoLimiter'>ALB</button>");
 $('.side').append('<div class="box"><div class="head"><div class="name">ShivaTradeInc Log</div> </div><div class="data" id="ShivaTradeInc_log"></div>');
 $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function() {
-	data = $('.cols .col.sellCol .data');
+	data = $('.cols .col.sellCol .data form').hide();
+	data = $('.cols .col.sellCol .data #ShivaTradeIncViewX').remove();
+	data = $('.cols .col.sellCol .data').append("<div style='padding:4px' id='ShivaTradeIncViewX'></div>");
+	data = $('.cols .col.sellCol .data #ShivaTradeIncViewX');
 	
 	StartCurrentPrice = $("#hilights .info").html();
 	
@@ -128,13 +131,13 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	});
 	
 	// процент роста валюты, при котором SellPrice и вся лестница сдвигается вверх
-	$(data).append("<tr><td>StopTigger:</td><td><input type='text' id='StopTigger' placeholder='StopTigger' value=''><b id='StopTiggerView'></b></td></tr>");
+	/* $(data).append("<tr><td>StopTigger:</td><td><input type='text' id='StopTigger' placeholder='StopTigger' value=''><b id='StopTiggerView'></b></td></tr>");
 	$(data).on('change', '#StopTigger', function() {
 		Price = parseFloat($("#CurrentPrice").val());
 		str = $("#StopStep").val();
 		StopStep = precentOrValue(str, Price, 0);
 		$("#StopTiggerView").html(StopStep);
-	});
+	}); */
 	
 	
 	// процент роста валюты, при котором SellPrice и вся лестница сдвигается вверх
