@@ -8,7 +8,7 @@
 		"notifications"
 	],
 	"icons": {
-		"128": "s.jpg"
+		"128": "/img/s.jpg"
 	 },
 	"content_scripts": [
 		{
