@@ -93,32 +93,34 @@ Variables:
 $(".cols .col.sellCol .head .linkContainer").html("<button href='#' id='ShivaTradeInc_autoLimiter'>ALB</button>");
 $('.side').append('<div class="box"><div class="head"><div class="name">ShivaTradeInc Log</div> </div><div class="data" id="ShivaTradeInc_log"></div>');
 $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function() {
+	data = $('.cols .col.sellCol .data');
+	
 	StartCurrentPrice = $("#hilights .info").html();
 	
 
-	$('.cols .col.sellCol .data').html("<tr><td>Amount:</td><td><input type='text' id='Amount' placeholder='Amount' value=''> <b id='AmountCash'></b></td></tr>");
+	$(data).html("<tr><td>Amount:</td><td><input type='text' id='Amount' placeholder='Amount' value=''> <b id='AmountCash'></b></td></tr>");
 	
 	// текущий ценник
-	$('.cols .col.sellCol .data').append("<tr><td>CurrentPrice:</td><td><input type='text' id='CurrentPrice' placeholder='CurrentPrice (Click to update)' value='"+StartCurrentPrice+"'></td></tr>");
-	$('.cols .col.sellCol .data').on('click', '#CurrentPrice', function() {
+	$(data).append("<tr><td>CurrentPrice:</td><td><input type='text' id='CurrentPrice' placeholder='CurrentPrice (Click to update)' value='"+StartCurrentPrice+"'></td></tr>");
+	$(data).on('click', '#CurrentPrice', function() {
 		nowPrice = parseFloat($("#hilights .info").html());
 		$("#CurrentPrice").val(nowPrice);
 	});
 	
 	// ценник продажи валюты, высшая ступень лестницы. [задаётся в % от CurrentPrice]
-	$('.cols .col.sellCol .data').append("<tr><td>SellPrice % or $:</td><td><input type='text' id='SellPrice'  placeholder='SellPrice %' value=''><b id='SellPriceReal'></b></td></tr>");
-	$('.cols .col.sellCol .data').on('change', '#SellPrice', function() {
+	$(data).append("<tr><td>SellPrice % or $:</td><td><input type='text' id='SellPrice'  placeholder='SellPrice %' value=''><b id='SellPriceReal'></b></td></tr>");
+	$(data).on('change', '#SellPrice', function() {
 		nowPrice = parseFloat($("#CurrentPrice").val());
 		str = $("#SellPrice").val();
 		SellPrice = precentOrValue(str, nowPrice, 0);
 		//$("#SellPriceReal").html(SellPrice);
 	});
 	// количество ступеней лестницы
-	$('.cols .col.sellCol .data').append("<tr><td>StopAmount:</td><td><input type='text' id='StopAmount' placeholder='StopAmount' value='3'></td></tr>");
+	$(data).append("<tr><td>StopAmount:</td><td><input type='text' id='StopAmount' placeholder='StopAmount' value='3'></td></tr>");
 	
 	// шаг (задаётся абсолютной величиной, или % от SellPrice, на выбор пользователя)
-	$('.cols .col.sellCol .data').append("<tr><td>StopStep % or $:</td><td><input type='text' id='StopStep' placeholder='StopStep %' value=''><b id='StopStepView'></b></td></tr>");
-	$('.cols .col.sellCol .data').on('change', '#StopStep', function() {
+	$(data).append("<tr><td>StopStep % or $:</td><td><input type='text' id='StopStep' placeholder='StopStep %' value=''><b id='StopStepView'></b></td></tr>");
+	$(data).on('change', '#StopStep', function() {
 		Price = parseFloat($("#CurrentPrice").val());
 		str = $("#StopStep").val();
 		StopStep = precentOrValue(str, Price, 0);
@@ -126,15 +128,15 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	});
 	
 	// процент роста валюты, при котором SellPrice и вся лестница сдвигается вверх
-	$('.cols .col.sellCol .data').append("<tr><td>UpdateTrigger (N\A):</td><td><input type='text' id='UpdateTrigger' placeholder='UpdateTrigger' value=''><b id='UpdateTriggerView'></b></td></tr>");
-	$('.cols .col.sellCol .data').on('change', '#UpdateTrigger', function() {
+	$(data).append("<tr><td>UpdateTrigger (N\A):</td><td><input type='text' id='UpdateTrigger' placeholder='UpdateTrigger' value=''><b id='UpdateTriggerView'></b></td></tr>");
+	$(data).on('change', '#UpdateTrigger', function() {
 		Price = parseFloat($("#CurrentPrice").val());
 		str = $("#UpdateTrigger").val();
 		UpdateTrigger = parseFloat(precentOrValue(str, Price, Price));
 		//$("#UpdateTriggerView").html(UpdateTrigger);
 	});
 	
-	$('.cols .col.sellCol .data').on('change', 'input', function() {
+	$(data).on('change', 'input', function() {
 		$("#ShivaTradeInc_log").html("Log...");
 		$("#ShivaTradeInc_log").append("<b>Preview sell orders</b>");
 		sell = limiterSell(false);
@@ -143,8 +145,8 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 		}
 	});
 	
-	$('.cols .col.sellCol .data').append("<button href='#' id='ShivaTradeInc_autoLimiter_SELL'>SELL</button>");
-	$('.cols .col.sellCol .data').on('click', '#ShivaTradeInc_autoLimiter_SELL', function() {
+	$(data).append("<button href='#' id='ShivaTradeInc_autoLimiter_SELL'>SELL</button>");
+	$(data).on('click', '#ShivaTradeInc_autoLimiter_SELL', function() {
 		limiterSell(true);
 	});
 	$('#secondaryBalance').unbind();
