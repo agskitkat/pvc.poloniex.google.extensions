@@ -1,0 +1,29 @@
+{
+	"manifest_version": 2,
+	"name": "Расширенные виды Poloniex [Shiva Trade Inc.]",
+	"description": "Помогает быстрее ориентироваться, ставить ордера",
+	"version": "0.1",
+	"permissions": [
+		"unlimitedStorage",
+		"notifications"
+	],
+	"icons": {
+		"128": "s.jpg"
+	 },
+	"content_scripts": [
+		{
+		  "matches": [ "*://poloniex.com/*" ],
+		  "all_frames": true,
+		  "js": [ "/js/jquery.js", "/js/background.js" ],
+		  "run_at": "document_end"
+		}
+	],
+	"web_accessible_resources": [
+		"/js/poloniex_modificator.js"
+	],
+	"browser_action": {
+        "default_title": "PCV [Shiva Trade Inc.]",
+        "default_icon": "/img/s.jpg",
+        "default_popup": "/html/popup.html"
+    }
+}
