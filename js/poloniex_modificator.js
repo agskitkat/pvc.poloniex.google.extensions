@@ -90,7 +90,7 @@ Variables:
  
  
  
-$(".cols .col.sellCol .head .linkContainer").html("<button href='#' id='ShivaTradeInc_autoLimiter'>ALS</button>");
+$(".cols .col.sellCol .head .linkContainer").html("<button href='#' id='ShivaTradeInc_autoLimiter'>ALB</button>");
 $('.side').append('<div class="box"><div class="head"><div class="name">ShivaTradeInc Log</div> </div><div class="data" id="ShivaTradeInc_log"></div>');
 $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function() {
 	StartCurrentPrice = $("#hilights .info").html();
