@@ -90,7 +90,7 @@ Variables:
  
  
  
-$(".cols .col.sellCol .head .linkContainer").html("<button href='#' id='ShivaTradeInc_autoLimiter'>ALB</button>");
+$(".cols .col.sellCol .head .linkContainer").html("<button class='theButton' href='#' id='ShivaTradeInc_autoLimiter'>ALB</button>");
 $('.side').append('<div class="box"><div class="head"><div class="name">ShivaTradeInc Log</div> </div><div class="data" id="ShivaTradeInc_log"></div>');
 $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function() {
 	data = $('.cols .col.sellCol .data');
@@ -128,7 +128,17 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	});
 	
 	// процент роста валюты, при котором SellPrice и вся лестница сдвигается вверх
-	$(data).append("<tr><td>UpdateTrigger (N\A):</td><td><input type='text' id='UpdateTrigger' placeholder='UpdateTrigger' value=''><b id='UpdateTriggerView'></b></td></tr>");
+	$(data).append("<tr><td>StopTigger:</td><td><input type='text' id='StopTigger' placeholder='StopTigger' value=''><b id='StopTiggerView'></b></td></tr>");
+	$(data).on('change', '#StopTigger', function() {
+		Price = parseFloat($("#CurrentPrice").val());
+		str = $("#StopStep").val();
+		StopStep = precentOrValue(str, Price, 0);
+		$("#StopTiggerView").html(StopStep);
+	});
+	
+	
+	// процент роста валюты, при котором SellPrice и вся лестница сдвигается вверх
+	$(data).append("<tr><td>UpdateTrigger (N/A):</td><td><input type='text' id='UpdateTrigger' placeholder='UpdateTrigger' value=''><b id='UpdateTriggerView'></b></td></tr>");
 	$(data).on('change', '#UpdateTrigger', function() {
 		Price = parseFloat($("#CurrentPrice").val());
 		str = $("#UpdateTrigger").val();
@@ -137,18 +147,32 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	});
 	
 	$(data).on('change', 'input', function() {
-		$("#ShivaTradeInc_log").html("Log...");
-		$("#ShivaTradeInc_log").append("<b>Preview sell orders</b>");
-		sell = limiterSell(false);
+		$("#ShivaTradeInc_log").html("");
+		$("#ShivaTradeInc_log").append("<table class='dataTable no-footer'><tr><th style='padding:4px' class='odd'>Rate</th><th style='padding:4px' class='odd'>Amount</th></tr>");
+		sell = limiterSell(false, false);
 		for(i=0; sell.length > i; i++) {
-			$("#ShivaTradeInc_log").append(sell[i].rate + " - " + sell[i].amount +"<br>");
+			if(sell.length > (i+1)) {
+				$("#ShivaTradeInc_log .dataTable").append("<tr><td class='odd' style='padding:4px'>"+sell[i].rate + "</td><td style='padding:4px' class='odd'>" + sell[i].amount +"</td></tr>");
+			} else {
+				$("#ShivaTradeInc_log .dataTable").append("<tr><td class='odd' style='padding:4px'>STOP : "+(sell[i].stopRate) + "<br>LIMIT : "+(sell[i].rate)+"</td><td style='padding:4px' class='odd'>" + sell[i].amount +"</td></tr>");
+			}
 		}
+		// Расчёт лимита
+	
+		$("#ShivaTradeInc_log").append("</table>");
+		console.log(sell);
 	});
 	
-	$(data).append("<button href='#' id='ShivaTradeInc_autoLimiter_SELL'>SELL</button>");
+	$(data).append("<button class='theButton' href='#' id='ShivaTradeInc_autoLimiter_SELL'>SELL</button>");
+	$(data).append("<button class='theButton' href='#' id='ShivaTradeInc_autoLimiter_SELL_SL'>SELL +SL</button>");
 	$(data).on('click', '#ShivaTradeInc_autoLimiter_SELL', function() {
-		limiterSell(true);
+		limiterSell(true, false);
 	});
+	
+	$(data).on('click', '#ShivaTradeInc_autoLimiter_SELL_SL', function() {
+		limiterSellSL(true);
+	});
+	
 	$('#secondaryBalance').unbind();
 	$('#secondaryBalance').bind('click', function(){
 		console.log("Allin !");
@@ -156,8 +180,13 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	});
 });
 
-function limiterSell(sellx) {
-	$("#ShivaTradeInc_log").html("");
+// Продажа с лимитами
+function limiterSellSL(sellx) {
+	limiterSell(sellx, true);
+}
+
+// Продажа лесенкой
+function limiterSell(sellx, sl) {
 	
 	Amount = parseFloat($("#Amount").val());
 	StopAmount = parseFloat($("#StopAmount").val());
@@ -168,7 +197,6 @@ function limiterSell(sellx) {
 	StopStep = precentOrValue(str, Price, 0);
 	str = $("#SellPrice").val();
 	SellPrice = precentOrValue(str, Price, 0);
-	
 	
 	
 	sell = {
@@ -185,28 +213,49 @@ function limiterSell(sellx) {
 	
 	for(i=0; sell.stopAmount > i; i++) {
 		
+		// https://poloniex.com/private.php?currencyPair=USDT_XRP&rate=10&amount=0.56717797&command=sell
 		orders[i] = {
 			currencyPair: sell.pair, 
 			rate: (sell.sellPrice - (sell.stopStep * i)), 
 			amount : (sell.amount / sell.stopAmount),
 			command : "sell"
 		};
+		
+		// Не выполняется для расчётов
 		if(sellx) {
-			setTimeout(SellAction, 500*i, orders[i]);
+			// По кнопке SELL ордера на продажу
+			setTimeout(PrivateAction, 750*i, orders[i]);
 		}
 	};
+	
+	// расчитываем лимит
+	//https://poloniex.com/private.php?currencyPair=USDT_XRP&rate=0.09&amount=0.0800000&stopRate=0.1&command=stopLimitSell
+	orders[orders.length] = {
+		currencyPair: sell.pair, 
+		rate: (sell.sellPrice - (sell.stopStep * (i + 1))),
+		stopRate : 	(sell.sellPrice - (sell.stopStep * i)),			
+		amount : sell.amount,
+		command : "stopLimitSell"
+	};
+	
+	// По кнопке SELL+SL
+	if(sl) {
+		// Закрываем лимитом
+		setTimeout(PrivateAction, 750*i, orders[(orders.length-1)]);
+	};
+	
 	return orders;
 }
 
-function SellAction(order) {
-	// https://poloniex.com/private.php?currencyPair=USDT_XRP&rate=10&amount=0.56717797&command=sell
+function PrivateAction(order) {
+	
 	$.ajax({
 		url: "https://poloniex.com/private.php",
 		data: order,
 		success: function(data, textStatus, jqXHR){
-			console.log("SellOrderRaw ["+i+"]:");
+			console.log("OrderRaw ["+i+"]:");
 			console.log(order);
-			console.log("SellOrderRerquest ["+i+"]: " + data);
+			console.log("OrderRerquest ["+i+"]: " + data);
 		}
 	});
 }
