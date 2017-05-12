@@ -102,7 +102,7 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	$('.cols .col.sellCol .data').append("<tr><td>CurrentPrice:</td><td><input type='text' id='CurrentPrice' placeholder='CurrentPrice (Click to update)' value='"+StartCurrentPrice+"'></td></tr>");
 	$('.cols .col.sellCol .data').on('click', '#CurrentPrice', function() {
 		nowPrice = parseFloat($("#hilights .info").html());
-		//$("#CurrentPrice").val(nowPrice);
+		$("#CurrentPrice").val(nowPrice);
 	});
 	
 	// ценник продажи валюты, высшая ступень лестницы. [задаётся в % от CurrentPrice]
