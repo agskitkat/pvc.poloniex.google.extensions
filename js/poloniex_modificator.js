@@ -54,7 +54,7 @@ $(document).ready(function(){
 	
 	setInterval(updateColor, 1000);
 	
-	$(".controls").append('<div class="controlGroup replaceCheckboxes" title="Spot order of coficent all total volume"> <input min="0" max="100" step="0.0001" type="number" name="SpotLight" value="'+precentBig+'" id="SpotLight"><label for="SpotLight">SpotLight</label></div>');
+	$(".controls").append('<div class="controlGroup replaceCheckboxes" title="Spot order of coficent all total volume"> <input min="0" max="100" step="0.00001" type="number" name="SpotLight" value="'+precentBig+'" id="SpotLight"><label for="SpotLight">SpotLight</label></div>');
 	$(".controls").on('change', '#SpotLight', function() {
 		precentBig = $("#SpotLight").val();
 		updateColor();
