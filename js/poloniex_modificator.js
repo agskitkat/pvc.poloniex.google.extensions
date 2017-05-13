@@ -59,7 +59,24 @@ $(document).ready(function(){
 		precentBig = $("#SpotLight").val();
 		updateColor();
 	});
+	
+	var mp3url = mppath;
+	
+	$("#hilights .row:first").append('<div class="ringPrice"><div class="name">Ring</div><div class="info"><input min="0" style="max-width:100%;" type="number" name="LastPriceRing" value="" id="LastPriceRing"></div></div>');
+	$("#hilights .lastPrice .info").bind("DOMSubtreeModified", function(){
+		// Ring
+		val = $("#LastPriceRing").val();
+		if(val > 0) {
+			nowPrice = parseFloat($(this).html());
+			if(nowPrice < val) {
+				console.log("received " + mp3url);
+				var audio = new Audio(mp3url);
+				audio.play();
+			}
+		}
+	});
 });
+
 
 /* 
 

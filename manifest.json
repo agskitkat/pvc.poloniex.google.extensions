@@ -14,12 +14,13 @@
 		{
 		  "matches": [ "*://poloniex.com/*" ],
 		  "all_frames": true,
-		  "js": [ "/js/jquery.js", "/js/background.js" ],
+		  "js": [ "/js/jquery.js", "/js/background.js"],
 		  "run_at": "document_end"
 		}
 	],
 	"web_accessible_resources": [
-		"/js/poloniex_modificator.js"
+		"/js/poloniex_modificator.js",
+		"/mp3/notification.mp3"
 	],
 	"browser_action": {
         "default_title": "PCV [Shiva Trade Inc.]",
