@@ -157,9 +157,19 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	});
 	
 	$(data).on('change', 'input', function() {
+		
 		$("#ShivaTradeInc_log").html("");
 		$("#ShivaTradeInc_log").append("<h4>Orders preview:</h4><table class='dataTable no-footer'><tr><th style='padding:4px' class='odd'>Rate</th><th style='padding:4px' class='odd'>Amount</th></tr>");
+		
+		onlyStopLimit = $("#stop-limit-only-do").is(':checked');
+		if(onlyStopLimit) {
+			$("#ShivaTradeInc_autoLimiter_SELL").prop('disabled', true);
+		} else {
+			$("#ShivaTradeInc_autoLimiter_SELL").prop('disabled', false);
+		}
+		
 		sell = limiterSell(false, false);
+		
 		for(i=0; sell.length > i; i++) {
 			if(!sell[i].stopRate) {
 				$("#ShivaTradeInc_log .dataTable").append("<tr><td class='odd' style='padding:4px'>"+sell[i].rate + "</td><td style='padding:4px' class='odd'>" + sell[i].amount +"</td></tr>");
@@ -175,6 +185,9 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	
 	$(data).append("<button class='theButton' href='#' id='ShivaTradeInc_autoLimiter_SELL'>SELL</button>");
 	$(data).append("<button class='theButton' href='#' id='ShivaTradeInc_autoLimiter_SELL_SL'>SELL +SL</button>");
+	$(data).append('<div class="controlGroup replaceCheckboxes" title="Only STOP-LIMIT"><input type="checkbox" name="stop-limit-only-do" id="stop-limit-only-do"><label for="stop-limit-only-do">STOP-LIMIT ONLY</label></div>');
+	
+	
 	$(data).on('click', '#ShivaTradeInc_autoLimiter_SELL', function() {
 		limiterSell(true, false);
 	});
@@ -238,15 +251,34 @@ function limiterSell(sellx, sl) {
 		}
 	};
 	
-	// расчитываем лимит
-	//https://poloniex.com/private.php?currencyPair=USDT_XRP&rate=0.09&amount=0.0800000&stopRate=0.1&command=stopLimitSell
-	orders[orders.length] = {
-		currencyPair: sell.pair, 
-		rate: (sell.sellPrice - (sell.stopStep * (i + 1))),
-		stopRate : 	(sell.sellPrice - (sell.stopStep * i)),			
-		amount : sell.amount,
-		command : "stopLimitSell"
-	};
+	onlyStopLimit = $("#stop-limit-only-do").is(':checked');
+	console.log(onlyStopLimit);
+	if(onlyStopLimit) {
+		for(i=0; sell.stopAmount > i; i++) {
+			orders[i] = {
+				currencyPair: sell.pair, 
+				rate: (sell.sellPrice - (sell.stopStep * (i + 1))),
+				stopRate : 	(sell.sellPrice - (sell.stopStep * i)),			
+				amount : (sell.amount / sell.stopAmount),
+				command : "stopLimitSell"
+			};
+			
+			if(sl) {
+				// Лесенка лимитов
+				setTimeout(PrivateAction, 1000*i, orders[i]);
+			};
+		}
+	} else {
+		// расчитываем лимит
+		//https://poloniex.com/private.php?currencyPair=USDT_XRP&rate=0.09&amount=0.0800000&stopRate=0.1&command=stopLimitSell
+		orders[orders.length] = {
+			currencyPair: sell.pair, 
+			rate: (sell.sellPrice - (sell.stopStep * (i + 1))),
+			stopRate : 	(sell.sellPrice - (sell.stopStep * i)),			
+			amount : sell.amount,
+			command : "stopLimitSell"
+		};
+	}
 	
 	// По кнопке SELL+SL
 	if(sl) {
