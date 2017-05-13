@@ -68,10 +68,11 @@ $(document).ready(function(){
 		if(val > 0) {
 			nowPrice = parseFloat($(this).html());
 			if(nowPrice < val) {
-				console.log("received " + mppath);
+				// console.log("received " + mppath);
 				// TODO по нормальному сделать запрос к файлу а не эти костыли
 				// Проблема с Failed to load because no supported source was found.
-				var audio = new Audio("http://vereyateplo.ru/images/notification.mp3");
+				// var audio = new Audio("http://vereyateplo.ru/images/notification.mp3");
+				audio = document.getElementById('xxx-signal');
 				audio.play();
 				$("#LastPriceRing").val("");
 			}
@@ -329,5 +330,3 @@ function precentOrValue(str, full, add) {
 		return str;
 	}
 }
- 
- 

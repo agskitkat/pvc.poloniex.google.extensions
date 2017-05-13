@@ -1,15 +1,9 @@
 console.log("Poloniex include script!");
-$.get(chrome.extension.getURL('/js/poloniex_modificator.js'), 
-	function(data) {
-		var script = document.createElement("script");
-		script.setAttribute("type", "text/javascript");
-		script.innerHTML = data;
-		
-		var script_mp3 = document.createElement("script");
-		script_mp3.setAttribute("type", "text/javascript");
-		script_mp3.innerHTML = "var mppath = '"+chrome.extension.getURL("/mp3/notification.mp3")+"';";
-		
-		document.getElementsByTagName("head")[0].appendChild(script_mp3);
-		document.getElementsByTagName("head")[0].appendChild(script);
-	}	
-);
+var browser = navigator.appNamebrowser = navigator.appName;
+$(function(){
+	console.log("jQuery");
+});
+
+console.log(chrome.extension.getURL('/js/poloniex_modificator.js'));
+$("body").append('<audio style="display:none;"  id="xxx-signal"><source src="'+chrome.extension.getURL("/mp3/notification.mp3")+'" type="audio/mpeg"></audio>');
+$("head").append("<script type='text/javascript' src='"+chrome.extension.getURL('/js/poloniex_modificator.js')+"'></script>");
