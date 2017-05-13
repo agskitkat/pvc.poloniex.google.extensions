@@ -72,6 +72,7 @@ $(document).ready(function(){
 				console.log("received " + mp3url);
 				var audio = new Audio(mp3url);
 				audio.play();
+				$("#LastPriceRing").val("");
 			}
 		}
 	});
