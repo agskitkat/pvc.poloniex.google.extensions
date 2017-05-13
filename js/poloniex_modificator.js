@@ -18,7 +18,7 @@ $(document).ready(function(){
 	$("#asksTotal").bind("DOMSubtreeModified", function(){
 		asksTotalPRE = parseFloat($(this).html());
 		if(asksTotalPRE) {
-			asksTotal = bidsTotalPRE;
+			asksTotal = asksTotalPRE;
 		}
 	});
 
@@ -26,9 +26,11 @@ $(document).ready(function(){
 		momentBids = 0;
 		momentSell = 0;
 	
+		sumTotal = bidsTotal + asksTotal;
+	
 		$("#bidsTableBody tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			if(orderTotal > bidsTotal * precentBig) {
+			if(orderTotal > sumTotal * precentBig) {
 				momentBids += orderTotal;
 				$(this).find("td").css("color", "#11AA11");
 			} else {
@@ -38,7 +40,7 @@ $(document).ready(function(){
 		
 		$("#sellOrderBookTable tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			if(orderTotal > asksTotal * precentBig) {
+			if(orderTotal > sumTotal * precentBig) {
 				momentSell += orderTotal;
 				$(this).find("td").css("color", "#AA1111");
 			} else {
@@ -51,7 +53,12 @@ $(document).ready(function(){
 	};
 	
 	setInterval(updateColor, 1000);
-
+	
+	$(".controls").append('<div class="controlGroup replaceCheckboxes" title="Spot order of coficent all total volume"> <input min="0" max="100" type="number" name="SpotLight" value="'+precentBig+'" id="SpotLight"><label for="SpotLight">SpotLight</label></div>');
+	$(".controls").on('change', '#SpotLight', function() {
+		precentBig = $("#SpotLight").val();
+		updateColor();
+	});
 });
 
 /* 
@@ -151,10 +158,10 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	
 	$(data).on('change', 'input', function() {
 		$("#ShivaTradeInc_log").html("");
-		$("#ShivaTradeInc_log").append("<table class='dataTable no-footer'><tr><th style='padding:4px' class='odd'>Rate</th><th style='padding:4px' class='odd'>Amount</th></tr>");
+		$("#ShivaTradeInc_log").append("<h4>Orders preview:</h4><table class='dataTable no-footer'><tr><th style='padding:4px' class='odd'>Rate</th><th style='padding:4px' class='odd'>Amount</th></tr>");
 		sell = limiterSell(false, false);
 		for(i=0; sell.length > i; i++) {
-			if(sell.length > (i+1)) {
+			if(!sell[i].stopRate) {
 				$("#ShivaTradeInc_log .dataTable").append("<tr><td class='odd' style='padding:4px'>"+sell[i].rate + "</td><td style='padding:4px' class='odd'>" + sell[i].amount +"</td></tr>");
 			} else {
 				$("#ShivaTradeInc_log .dataTable").append("<tr><td class='odd' style='padding:4px'>STOP : "+(sell[i].stopRate) + "<br>LIMIT : "+(sell[i].rate)+"</td><td style='padding:4px' class='odd'>" + sell[i].amount +"</td></tr>");
@@ -227,7 +234,7 @@ function limiterSell(sellx, sl) {
 		// Не выполняется для расчётов
 		if(sellx) {
 			// По кнопке SELL ордера на продажу
-			setTimeout(PrivateAction, 750*i, orders[i]);
+			setTimeout(PrivateAction, 1000*i, orders[i]);
 		}
 	};
 	
@@ -244,7 +251,7 @@ function limiterSell(sellx, sl) {
 	// По кнопке SELL+SL
 	if(sl) {
 		// Закрываем лимитом
-		setTimeout(PrivateAction, 750*i, orders[(orders.length-1)]);
+		setTimeout(PrivateAction, 1000*i, orders[(orders.length-1)]);
 	};
 	
 	return orders;
