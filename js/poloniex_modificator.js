@@ -7,6 +7,9 @@ $(document).ready(function(){
 	
 	var momentBids = 0;
 	var momentSell = 0;
+	
+	var higestAmountBid = 0;
+	var higestAmountSell = 0;
 
 	$("#bidsTotal").bind("DOMSubtreeModified", function(){
 		bidsTotalPRE = parseFloat($(this).html());
@@ -21,18 +24,38 @@ $(document).ready(function(){
 			asksTotal = asksTotalPRE;
 		}
 	});
-
+    
+	
+	// Spot Light
 	function updateColor() {	
 		momentBids = 0;
 		momentSell = 0;
-	
-		sumTotal = bidsTotal + asksTotal;
+		
+		higestAmountBid = 0;
+		higestAmountSell = 0;
+		
+		$("#bidsTableBody tr").each(function(key, val){
+			nv = parseFloat($(val).find(".orderTotal").html());
+			if(nv > higestAmountBid) {
+				higestAmountBid = nv;
+			}
+		});
+		
+		$("#sellOrderBookTable tr").each(function(key, val){
+			nv = parseFloat($(val).find(".orderTotal").html());
+			if(nv > higestAmountSell) {
+				higestAmountSell = nv;
+			}
+		});
+		
+		
 	
 		$("#bidsTableBody tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			if(orderTotal > sumTotal * precentBig) {
-				momentBids += orderTotal;
-				$(this).find("td").css("color", "#11AA11");
+			momentBids += orderTotal;
+			if(orderTotal >  precentBig) {
+				
+				$(this).find("td").css("color", "rgb(11,"+grad(higestAmountBid, orderTotal)+", 11)");
 			} else {
 				$(this).find("td").css("color", "#6f9397");
 			}
@@ -40,9 +63,10 @@ $(document).ready(function(){
 		
 		$("#sellOrderBookTable tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			if(orderTotal > sumTotal * precentBig) {
-				momentSell += orderTotal;
-				$(this).find("td").css("color", "#AA1111");
+			momentSell += orderTotal;
+			if(orderTotal > precentBig) {
+				
+				$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 11, 11)");
 			} else {
 				$(this).find("td").css("color", "#6f9397");
 			}
@@ -52,15 +76,24 @@ $(document).ready(function(){
 		$(".buyOrders .head .name").html("BUY " + momentBids.toFixed(0));
 	};
 	
+	function grad(x, y) {
+		c = (127 / x) * y + 127;
+		
+		
+		console.log(c);
+		return c.toFixed(0);
+	}
+	
+	
 	setInterval(updateColor, 1000);
 	
-	$(".controls").append('<div class="controlGroup replaceCheckboxes" title="Spot order of coficent all total volume"> <input min="0" max="100" step="0.00001" type="number" name="SpotLight" value="'+precentBig+'" id="SpotLight"><label for="SpotLight">SpotLight</label></div>');
+	$(".controls").append('<div class="controlGroup replaceCheckboxes" title="Spot order of coficent all total volume"> <input min="0"  type="number" name="SpotLight" value="'+precentBig+'" id="SpotLight"><label for="SpotLight">SpotLight</label></div>');
 	$(".controls").on('change', '#SpotLight', function() {
 		precentBig = $("#SpotLight").val();
 		updateColor();
 	});
 
-	
+	// RING !
 	$("#hilights .row:first").append('<div class="ringPrice"><div class="name">Ring</div><div class="info"><input min="0" style="max-width:100%;" type="number" name="LastPriceRing" value="" id="LastPriceRing"></div></div>');
 	$("#hilights .lastPrice .info").bind("DOMSubtreeModified", function(){
 		// Ring
@@ -68,10 +101,6 @@ $(document).ready(function(){
 		if(val > 0) {
 			nowPrice = parseFloat($(this).html());
 			if(nowPrice < val) {
-				// console.log("received " + mppath);
-				// TODO по нормальному сделать запрос к файлу а не эти костыли
-				// Проблема с Failed to load because no supported source was found.
-				// var audio = new Audio("http://vereyateplo.ru/images/notification.mp3");
 				audio = document.getElementById('xxx-signal');
 				audio.play();
 				$("#LastPriceRing").val("");
