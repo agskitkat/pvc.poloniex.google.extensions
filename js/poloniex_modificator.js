@@ -36,25 +36,29 @@ $(document).ready(function(){
 		
 		$("#bidsTableBody tr").each(function(key, val){
 			nv = parseFloat($(val).find(".orderTotal").html());
+			momentBids += nv;
 			if(nv > higestAmountBid) {
 				higestAmountBid = nv;
 			}
 		});
 		
 		$("#sellOrderBookTable tr").each(function(key, val){
-			nv = parseFloat($(val).find(".orderTotal").html());
-			if(nv > higestAmountSell) {
-				higestAmountSell = nv;
+			sv = parseFloat($(val).find(".orderTotal").html());
+			if(sv)
+				momentSell = momentSell + sv;
+			
+			if(sv > higestAmountSell) {
+				higestAmountSell = sv;
 			}
 		});
 		
-		
+		$(".sellOrders .head .name").html("SELL " + momentSell.toFixed(0));
+		$(".buyOrders .head .name").html("BUY " + momentBids.toFixed(0));
 	
 		$("#bidsTableBody tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			momentBids += orderTotal;
-			if(orderTotal >  precentBig) {
-				
+			
+			if(orderTotal >  precentBig) {	
 				$(this).find("td").css("color", "rgb(11,"+grad(higestAmountBid, orderTotal)+", 11)");
 			} else {
 				$(this).find("td").css("color", "#6f9397");
@@ -63,24 +67,18 @@ $(document).ready(function(){
 		
 		$("#sellOrderBookTable tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			momentSell += orderTotal;
 			if(orderTotal > precentBig) {
-				
 				$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 11, 11)");
 			} else {
 				$(this).find("td").css("color", "#6f9397");
 			}
 		});
 		
-		$(".sellOrders .head .name").html("SELL " + momentSell.toFixed(0));
-		$(".buyOrders .head .name").html("BUY " + momentBids.toFixed(0));
+		
 	};
 	
 	function grad(x, y) {
-		c = (127 / x) * y + 127;
-		
-		
-		console.log(c);
+		c = (127 / x) * y + 127;		
 		return c.toFixed(0);
 	}
 	
