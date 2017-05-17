@@ -1,10 +1,10 @@
 # pvc.poloniex.google.extensions
-Poloniex custom view (PVC) Plugin for Google Chrome
+Poloniex custom view (PVC) Plugin for Google Chrome, Opera and FireFox
 
 Плагин Google Chrome для сайта биржи Poloniex. Расширяет возможности, помогает в трейде. Сейчас в состоянии ALPHA тестирования. 
 Я не несу ответственности за действия этого плагина, <b>все операции вы проводите на свой страх и риск</b>.
 
-<h2>Установка</h2>
+<h2>Установка Chrome & Opera</h2>
 
 Распакуйте архив в любую папку.
 
