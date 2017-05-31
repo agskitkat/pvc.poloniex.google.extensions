@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	console.log("Ready to work !");
+	$(".chartTitle").append(" <br><b> You profit <span id='youProfit'></span></b>")
+	
 	var precentBig = 0.00001;
 
 	var bidsTotal = 0;
@@ -103,6 +105,27 @@ $(document).ready(function(){
 				audio.play();
 				$("#LastPriceRing").val("");
 			}
+		}
+		
+		// YOU PROFIT
+		objLast = $("#userTradeHistoryTable tbody tr:first");
+		var type = $(objLast).find(".type .buyClass").html();
+		if(type) {
+			// (a — b) / [ (a + b) / 2 ] | * 100 % 
+			a = parseFloat($(objLast).find("td:eq(2)").html());
+			b = parseFloat($(this).html());
+			console.log(a + " - " + b);
+			if(a < b) {
+				c = 100 * a/b - 100;
+				$("#youProfit").css("color", "#1d7424");
+			} else {
+				c = 100-100*b/a;
+				$("#youProfit").css("color", "#c02a1d");
+			}
+			
+			$("#youProfit").html(c.toFixed(2) + "%");
+		} else {
+			$("#youProfit").html(0 + "% WAIT TO BUY !!!");
 		}
 	});
 });
