@@ -56,6 +56,14 @@ $(document).ready(function(){
 		
 		$(".sellOrders .head .name").html("SELL " + momentSell.toFixed(0));
 		$(".buyOrders .head .name").html("BUY " + momentBids.toFixed(0));
+		
+		if(momentSell > momentBids){
+			$(".sellOrders .head .name").css("fontWeight", 'bold');
+			$(".buyOrders .head .name").css("fontWeight", '400');
+		} else {
+			$(".buyOrders .head .name").css("fontWeight", 'bold');
+			$(".sellOrders .head .name").css("fontWeight", '400');
+		}
 	
 		$("#bidsTableBody tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
@@ -141,12 +149,6 @@ Variables:
 	- StopAmount    // количество ступеней лестницы
 	- StopStep      // шаг (задаётся абсолютной величиной, или % от SellPrice, на выбор пользователя)
 	- UpdateTrigger // процент роста валюты, при котором SellPrice и вся лестница сдвигается вверх
-
-	- currentPrice  = 100$
-	- SellPrice     = 10$ (10%) 
-	- StopAmount    = 4
-	- StopStep      = 
-	- UpdateTrigger = 
 	
 	Logic:
 		if(CurrentPrice() >= CurrentPrice() + UpdateTrigger * (( CurrentPrice() / 100) + CurrentPrice() ) ) {
