@@ -14,7 +14,7 @@ $(document).ready(function(){
 	var higestAmountSell = 0;
 	
 	var youLastBuy = 0;
-	var youLastSell = 0;
+	var youLastSells = [];
 	
 	var myOrders = [];
 
@@ -44,19 +44,19 @@ $(document).ready(function(){
 		higestAmountSell = 0;
 		
 		myOrders = [];
-		youLastSell = 0;
+		youLastSells = [];
 		
 		// Список моих ордеров
 		$("#myOrdersTable_wrapper #myOrdersTable tbody > tr").each(function(key, val){
 			var p = parseFloat($(val).find("td:eq(1)").html());
 			var t = $(val).find("td:eq(0) .sellClass").html();
 			myOrders.push( { "type":t, "price":p} );
-			if(t == "Sell" && youLastSell == 0) {
-				youLastSell = p;
+			if(t == "Sell") {
+				youLastSells.push(p);
 			}
 		});
 		
-		console.log(youLastSell);
+		console.log(youLastSells);
 		
 		$("#bidsTableBody tr").each(function(key, val){
 			nv = parseFloat($(val).find(".orderTotal").html());
@@ -100,15 +100,20 @@ $(document).ready(function(){
 		$("#sellOrderBookTable tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
 			orderRate = parseFloat($(val).find(".orderRate").html());
-			if(youLastSell.toFixed(8) == orderRate.toFixed(8)) {
-				$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 127, 11)");
+			// Подсвечиваем
+			if(orderTotal > precentBig) {
+				$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 11, 11)");
 			} else {
-				if(orderTotal > precentBig) {
-					$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 11, 11)");
-				} else {
-					$(this).find("td").css("color", "#6f9397");
+				$(this).find("td").css("color", "#6f9397");
+			}
+				
+			for(var i = 0; youLastSells.length > i;i++) {
+				if(youLastSells[i].toFixed(8) == orderRate.toFixed(8)) {
+					$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 127, 11)");
 				}
 			}
+			
+			
 		});
 	};
 	
