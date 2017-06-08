@@ -12,7 +12,14 @@ $(document).ready(function(){
 	
 	var higestAmountBid = 0;
 	var higestAmountSell = 0;
+	
+	var youLastBuy = 0;
+	var youLastSell = 0;
+	
+	var myOrders = [];
 
+	$(".heading.pad h1").html("You profit today");
+	
 	$("#bidsTotal").bind("DOMSubtreeModified", function(){
 		bidsTotalPRE = parseFloat($(this).html());
 		if(bidsTotalPRE) {
@@ -35,6 +42,21 @@ $(document).ready(function(){
 		
 		higestAmountBid = 0;
 		higestAmountSell = 0;
+		
+		myOrders = [];
+		youLastSell = 0;
+		
+		// Список моих ордеров
+		$("#myOrdersTable_wrapper #myOrdersTable tbody > tr").each(function(key, val){
+			var p = parseFloat($(val).find("td:eq(1)").html());
+			var t = $(val).find("td:eq(0) .sellClass").html();
+			myOrders.push( { "type":t, "price":p} );
+			if(t == "Sell" && youLastSell == 0) {
+				youLastSell = p;
+			}
+		});
+		
+		console.log(youLastSell);
 		
 		$("#bidsTableBody tr").each(function(key, val){
 			nv = parseFloat($(val).find(".orderTotal").html());
@@ -77,14 +99,17 @@ $(document).ready(function(){
 		
 		$("#sellOrderBookTable tr").each(function(key, val){
 			orderTotal = parseFloat($(val).find(".orderTotal").html());
-			if(orderTotal > precentBig) {
-				$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 11, 11)");
+			orderRate = parseFloat($(val).find(".orderRate").html());
+			if(youLastSell.toFixed(8) == orderRate.toFixed(8)) {
+				$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 127, 11)");
 			} else {
-				$(this).find("td").css("color", "#6f9397");
+				if(orderTotal > precentBig) {
+					$(this).find("td").css("color", "rgb("+grad(higestAmountSell, orderTotal)+", 11, 11)");
+				} else {
+					$(this).find("td").css("color", "#6f9397");
+				}
 			}
 		});
-		
-		
 	};
 	
 	function grad(x, y) {
@@ -121,8 +146,9 @@ $(document).ready(function(){
 		if(type) {
 			// (a — b) / [ (a + b) / 2 ] | * 100 % 
 			a = parseFloat($(objLast).find("td:eq(2)").html());
+			youLastBuy = a;
 			b = parseFloat($(this).html());
-			console.log(a + " - " + b);
+			
 			if(a < b) {
 				c = 100 * a/b - 100;
 				$("#youProfit").css("color", "#1d7424");
