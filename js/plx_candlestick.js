@@ -552,7 +552,8 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
 			if($.inArray(mySells[i], alredyMySellsDraw )) {
 				var mySell = mySells[i];
 				y = height - (mySell * vScale);
-				ctx.strokeStyle = redColor;
+				ctx.strokeStyle = "#e39706";
+				cat.fillStyle = "#e39706";
 				ctx.fillText(mySell.toFixed(decimals), width - 40, y + shft - 5);
 				
 				ctx.beginPath();
