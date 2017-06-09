@@ -14,4 +14,4 @@ Poloniex custom view (PVC) Plugin for Google Chrome, Opera and FireFox
 
 <br>
 <br>
-Поддержать проект можно по адресу BTC <b>1HtDwJHqes7XRXNiyX2dxYhxxq4xv65Z3m</b>
+Поддержать проект можно по адресу BTC:<br> <b>1HtDwJHqes7XRXNiyX2dxYhxxq4xv65Z3m</b>
