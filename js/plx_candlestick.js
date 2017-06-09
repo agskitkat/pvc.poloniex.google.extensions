@@ -1,5 +1,3 @@
-
-
 function backingScale() {
     if ('devicePixelRatio' in window && window.devicePixelRatio > 1)
         return window.devicePixelRatio;
@@ -72,6 +70,9 @@ function preview(canvasId, data, gutterWidth) {
 function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
     emaPeriod, ema2Period, showSma, showEma, showEma2, showFib,
     bollingerBand, mobile) {
+		
+	console.log("MAD CANDLESTICK");
+	
     if (data === undefined) { return false;}
     if (mobile === undefined)mobile = false;
     if (smaPeriod < 1) smaPeriod = 1;
@@ -140,6 +141,9 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         maxVol = 0;
     var x, y, w, h, vScale, volScale, count = 0;
     var fibLowX, fibHighX;
+	
+	var alredyMySellsDraw = [];
+	
     //trace(canvasId + ' w = ' + width + ', h = ' + height + ' ; d=' +dark);
     if (dark) {
         var borderColor = "#1f3232";
@@ -314,6 +318,7 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
 	    paddingBottom -= Math.round((bottom - ((marginBottom - paddingBottom) / vScale)) * vScale);
     }
     var lineTop = top + (marginTop / vScale);
+	
     // horiz lines and yaxis text
     for (var l = lineBottom; l <= lineTop+((lineTop - lineBottom) / step)/2; l += (lineTop - lineBottom) / step) {
         ctx.fillStyle = hLineColor;
@@ -325,6 +330,7 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         if (alignYaxisRight) { horizLineW = c.width; }
         ctx.fillRect(x, y + shft, horizLineW, h);
         ctx.fillStyle = textColor;
+		
         // move yaxis text into right margin
         var labelPos = 0;
         if (alignYaxisRight) { labelPos = w + 5; }
@@ -334,6 +340,28 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         lineRangeTop = l;
     }
     lineRangeBottom = lineBottom;
+	
+	// Draw my sell +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	for(var i = 0; i < mySells.length; i++) {	
+		if($.inArray(mySells[i], alredyMySellsDraw )) {
+			var mySell = mySells[i];
+			y = height - (mySell * vScale);
+			ctx.fillText(mySell.toFixed(decimals), width - 40, y + shft - 5);
+			
+			ctx.beginPath();
+			ctx.strokeStyle = redColor;
+			ctx.lineWidth = 1 * scaleFactor;
+			ctx.moveTo(marginLeft, y + shft);
+			ctx.lineTo(width, y + shft);
+		
+			ctx.stroke();
+			
+			//ctx.moveTo(marginLeft, y + shft);
+			//ctx.lineTo(width, y + shft);
+			
+			alredyMySellsDraw.push(mySell);
+		}
+	}
     
     for (var i = 0; i < start; i++) {
         if (!(data[i] instanceof Object)) {
@@ -359,7 +387,8 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         macdEntry = (macdClose * macdSmooth) + (prevMacdEntry * (1 - macdSmooth));
         prevMacdEntry = macdEntry;
     }
-    
+	
+	
     ctx.beginPath();
     ctx.moveTo(marginLeft, height - (prevEmaEntry * vScale) + shft);
     for (var i = start; i < end; i++) {
@@ -368,6 +397,9 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
             delete data[i];
             continue;
         }
+		
+		//console.log(data[i]);
+		
         high = data[i].high;
         low = data[i].low;
         open = data[i].open;
@@ -385,7 +417,9 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         y = height - (high * vScale);
         h = (high - low) * vScale;
         //x=Math.floor(x);
+		
         ctx.fillRect(x + marginLeft, y + shft, wickWidth, h);
+		
         if (low == chartLow) fibLowX = x;
         if (high == chartHigh) fibHighX = x;
         if (close > open) {

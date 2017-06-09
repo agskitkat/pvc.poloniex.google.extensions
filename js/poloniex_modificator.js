@@ -1,3 +1,6 @@
+// Values for MAD CANDLSTICK 
+var mySells = [];
+
 $(document).ready(function(){
 	console.log("Ready to work !");
 	$(".chartTitle").append(" <br><b> You profit <span id='youProfit'></span></b>")
@@ -53,10 +56,11 @@ $(document).ready(function(){
 			myOrders.push( { "type":t, "price":p} );
 			if(t == "Sell") {
 				youLastSells.push(p);
+				mySells.push(p);
 			}
 		});
 		
-		console.log(youLastSells);
+		//console.log(youLastSells);
 		
 		$("#bidsTableBody tr").each(function(key, val){
 			nv = parseFloat($(val).find(".orderTotal").html());

@@ -20,7 +20,8 @@
 	],
 	"web_accessible_resources": [
 		"/js/poloniex_modificator.js",
-		"/mp3/notification.mp3"
+		"/mp3/notification.mp3",
+		"/js/plx_candlestick.js"
 	],
 	"browser_action": {
         "default_title": "PCV [Shiva Trade Inc.]",
