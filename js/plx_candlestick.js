@@ -70,8 +70,6 @@ function preview(canvasId, data, gutterWidth) {
 function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
     emaPeriod, ema2Period, showSma, showEma, showEma2, showFib,
     bollingerBand, mobile) {
-		
-	console.log("MAD CANDLESTICK");
 	
     if (data === undefined) { return false;}
     if (mobile === undefined)mobile = false;
@@ -340,28 +338,6 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         lineRangeTop = l;
     }
     lineRangeBottom = lineBottom;
-	
-	// Draw my sell +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	for(var i = 0; i < mySells.length; i++) {	
-		if($.inArray(mySells[i], alredyMySellsDraw )) {
-			var mySell = mySells[i];
-			y = height - (mySell * vScale);
-			ctx.fillText(mySell.toFixed(decimals), width - 40, y + shft - 5);
-			
-			ctx.beginPath();
-			ctx.strokeStyle = redColor;
-			ctx.lineWidth = 1 * scaleFactor;
-			ctx.moveTo(marginLeft, y + shft);
-			ctx.lineTo(width, y + shft);
-		
-			ctx.stroke();
-			
-			//ctx.moveTo(marginLeft, y + shft);
-			//ctx.lineTo(width, y + shft);
-			
-			alredyMySellsDraw.push(mySell);
-		}
-	}
     
     for (var i = 0; i < start; i++) {
         if (!(data[i] instanceof Object)) {
@@ -569,6 +545,30 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         ctx.strokeStyle = ema2Color;
         ctx.stroke();
     }
+	
+	// Draw my sell +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	if ($(".toolPanel ul #sellCheckbox").is(':checked')) {
+		for(var i = 0; i < mySells.length; i++) {	
+			if($.inArray(mySells[i], alredyMySellsDraw )) {
+				var mySell = mySells[i];
+				y = height - (mySell * vScale);
+				ctx.fillText(mySell.toFixed(decimals), width - 40, y + shft - 5);
+				
+				ctx.beginPath();
+				ctx.strokeStyle = redColor;
+				ctx.lineWidth = 1 * scaleFactor;
+				ctx.moveTo(marginLeft, y + shft);
+				ctx.lineTo(width, y + shft);
+			
+				ctx.stroke();
+				
+				//ctx.moveTo(marginLeft, y + shft);
+				//ctx.lineTo(width, y + shft);
+				
+				alredyMySellsDraw.push(mySell);
+			}
+		}
+	}
     
     // MACD
     if (mobile){

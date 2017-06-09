@@ -38,6 +38,8 @@ $(document).ready(function(){
 	});
     
 	
+	$(".toolPanel ul").append('<li><div class="name"><input type="checkbox" id="sellCheckbox"><label for="sellCheckbox">Order view</label></div></li>');
+	
 	// Spot Light
 	function updateColor() {	
 		momentBids = 0;
