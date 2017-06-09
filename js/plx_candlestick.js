@@ -141,6 +141,7 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
     var fibLowX, fibHighX;
 	
 	var alredyMySellsDraw = [];
+	var alredyMyBuysDraw = [];
 	
     //trace(canvasId + ' w = ' + width + ', h = ' + height + ' ; d=' +dark);
     if (dark) {
@@ -546,28 +547,55 @@ function candlestick(canvasId, data, left, right, chartType, dark, smaPeriod,
         ctx.stroke();
     }
 	
-	// Draw my sell +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// Draw my sell & buy +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	if ($(".toolPanel ul #sellCheckbox").is(':checked')) {
-		for(var i = 0; i < mySells.length; i++) {	
-			if($.inArray(mySells[i], alredyMySellsDraw )) {
-				var mySell = mySells[i];
-				y = height - (mySell * vScale);
-				ctx.strokeStyle = redColor;
-				ctx.fillStyle = redColor;
-				ctx.fillText(mySell.toFixed(decimals), width - 40, y + shft - 5);
+		if(mySells.length != alredyMySellsDraw.length) {
+			for(var i = 0; i < mySells.length; i++) {	
+				if($.inArray(mySells[i], alredyMySellsDraw )) {
+					var mySell = mySells[i];
+					y = height - (mySell * vScale);
+					ctx.strokeStyle = redColor;
+					ctx.fillStyle = redColor;
+					ctx.fillText(mySell.toFixed(decimals), width - 40, y + shft - 2);
+					
+					ctx.beginPath();
+					
+					ctx.lineWidth = 1 * scaleFactor;
+					ctx.moveTo(marginLeft, y + shft);
+					ctx.lineTo(width, y + shft);
 				
-				ctx.beginPath();
+					ctx.stroke();
+					
+					//ctx.moveTo(marginLeft, y + shft);
+					//ctx.lineTo(width, y + shft);
+					
+					alredyMySellsDraw.push(mySell);
+				}
+			}
+		}
+		
+		if(myBuys.length != alredyMyBuysDraw.length) {
+			for(var i = 0; i < myBuys.length; i++) {	
+				if($.inArray(myBuys[i], alredyMyBuysDraw )) {
+					var myBuy = myBuys[i];
+					y = height - (myBuy * vScale);
+					ctx.strokeStyle = greenColor;
+					ctx.fillStyle = greenColor;
+					ctx.fillText(myBuy.toFixed(decimals), width - 40, y + shft - 2);
+					
+					ctx.beginPath();
+					
+					ctx.lineWidth = 1 * scaleFactor;
+					ctx.moveTo(marginLeft, y + shft);
+					ctx.lineTo(width, y + shft);
 				
-				ctx.lineWidth = 1 * scaleFactor;
-				ctx.moveTo(marginLeft, y + shft);
-				ctx.lineTo(width, y + shft);
-			
-				ctx.stroke();
-				
-				//ctx.moveTo(marginLeft, y + shft);
-				//ctx.lineTo(width, y + shft);
-				
-				alredyMySellsDraw.push(mySell);
+					ctx.stroke();
+					
+					//ctx.moveTo(marginLeft, y + shft);
+					//ctx.lineTo(width, y + shft);
+					
+					alredyMyBuysDraw.push(myBuy);
+				}
 			}
 		}
 	}

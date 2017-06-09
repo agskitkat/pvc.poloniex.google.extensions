@@ -1,5 +1,6 @@
 // Values for MAD CANDLSTICK 
 var mySells = [];
+var myBuys = [];
 
 $(document).ready(function(){
 	console.log("Ready to work !");
@@ -38,7 +39,7 @@ $(document).ready(function(){
 	});
     
 	
-	$(".toolPanel ul").append('<li><div class="name"><input type="checkbox" id="sellCheckbox"><label for="sellCheckbox">Order view</label></div></li>');
+	$(".toolPanel ul").append('<li><div class="name"><input type="checkbox" id="sellCheckbox"><label for="sellCheckbox">My open orders</label></div></li>');
 	
 	// Spot Light
 	function updateColor() {	
@@ -50,6 +51,8 @@ $(document).ready(function(){
 		
 		myOrders = [];
 		youLastSells = [];
+		mySells = [];
+		myBuys = [];
 		
 		// Список моих ордеров
 		$("#myOrdersTable_wrapper #myOrdersTable tbody > tr").each(function(key, val){
@@ -59,6 +62,11 @@ $(document).ready(function(){
 			if(t == "Sell") {
 				youLastSells.push(p);
 				mySells.push(p);
+			}
+			var t = $(val).find("td:eq(0) .buyClass").html();
+			myOrders.push( { "type":t, "price":p} );
+			if(t == "Buy") {
+				myBuys.push(p);
 			}
 		});
 		
