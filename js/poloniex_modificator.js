@@ -21,6 +21,8 @@ $(document).ready(function(){
 	var youLastSells = [];
 	
 	var myOrders = [];
+	
+	var vectorRing = '';
 
 	$(".heading.pad h1").html("You profit today");
 	
@@ -40,6 +42,21 @@ $(document).ready(function(){
     
 	
 	$(".toolPanel ul").append('<li><div class="name"><input type="checkbox" id="sellCheckbox"><label for="sellCheckbox">My open orders</label></div></li>');
+	
+	// RING !
+	$("#hilights .row:first").append('<div class="ringPrice"><div class="name">Ring</div><div class="info"><input min="0" style="max-width:100%;" type="number" name="LastPriceRing" value="" id="LastPriceRing"></div></div>');
+	$("#LastPriceRing").on('input', function(){
+		nowPrice = parseFloat($("#hilights .lastPrice .info").html());
+		val = parseFloat($(this).val());
+		if(nowPrice != val) {
+			if(nowPrice > val) {
+				vectorRing = "down";
+			} else {
+				vectorRing = "up";
+			}
+			console.log("RING ON ! : " + vectorRing);
+		}
+	});
 	
 	// Spot Light
 	function updateColor() {	
@@ -144,19 +161,35 @@ $(document).ready(function(){
 		precentBig = $("#SpotLight").val();
 		updateColor();
 	});
-
-	// RING !
-	$("#hilights .row:first").append('<div class="ringPrice"><div class="name">Ring</div><div class="info"><input min="0" style="max-width:100%;" type="number" name="LastPriceRing" value="" id="LastPriceRing"></div></div>');
+	
+	
 	$("#hilights .lastPrice .info").bind("DOMSubtreeModified", function(){
 		// Ring
 		val = $("#LastPriceRing").val();
-		if(val > 0) {
-			nowPrice = parseFloat($(this).html());
-			if(nowPrice < val) {
-				audio = document.getElementById('xxx-signal');
-				audio.play();
-				$("#LastPriceRing").val("");
+		if(vectorRing) {
+			console.log("Ring detect !");
+			
+			if(vectorRing == "down") {
+				nowPrice = parseFloat($(this).html());
+				if(nowPrice <= val) {
+					audio = document.getElementById('xxx-signal');
+					audio.play();
+					$("#LastPriceRing").val("");
+					vectorRing = '';
+				}
 			}
+			
+			if(vectorRing == "up") {
+				nowPrice = parseFloat($(this).html());
+				if(nowPrice >= val) {
+					audio = document.getElementById('xxx-signal');
+					audio.play();
+					$("#LastPriceRing").val("");
+					vectorRing = '';
+				}
+			}
+			
+			
 		}
 		
 		// YOU PROFIT
