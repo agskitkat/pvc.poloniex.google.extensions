@@ -4,7 +4,7 @@ var myBuys = [];
 
 $(document).ready(function(){
 	console.log("Ready to work !");
-	$(".chartTitle").append(" <br><b> You profit <span id='youProfit'></span></b>")
+	//$(".chartTitle").append(" <br><b> You profit <span id='youProfit'></span></b>")
 	
 	var precentBig = 0.00001;
 
@@ -71,7 +71,7 @@ $(document).ready(function(){
 		mySells = [];
 		myBuys = [];
 		
-		// Список моих ордеров
+		// List of my order
 		$("#myOrdersTable_wrapper #myOrdersTable tbody > tr").each(function(key, val){
 			var p = parseFloat($(val).find("td:eq(1)").html());
 			var t = $(val).find("td:eq(0) .sellClass").html();
@@ -86,8 +86,6 @@ $(document).ready(function(){
 				myBuys.push(p);
 			}
 		});
-		
-		//console.log(youLastSells);
 		
 		$("#bidsTableBody tr").each(function(key, val){
 			nv = parseFloat($(val).find(".orderTotal").html());
@@ -148,11 +146,11 @@ $(document).ready(function(){
 		});
 	};
 	
+	// Support gradien function
 	function grad(x, y) {
 		c = (127 / x) * y + 127;		
 		return c.toFixed(0);
 	}
-	
 	
 	setInterval(updateColor, 1000);
 	
@@ -165,6 +163,7 @@ $(document).ready(function(){
 	
 	$("#hilights .lastPrice .info").bind("DOMSubtreeModified", function(){
 		// Ring
+		/* Do ring on amount reach */
 		val = $("#LastPriceRing").val();
 		if(vectorRing) {
 			console.log("Ring detect !");
@@ -192,11 +191,11 @@ $(document).ready(function(){
 			
 		}
 		
-		// YOU PROFIT
+		// Calculete you profit without commision
+		// 
 		objLast = $("#userTradeHistoryTable tbody tr:first");
 		var type = $(objLast).find(".type .buyClass").html();
 		if(type) {
-			// (a — b) / [ (a + b) / 2 ] | * 100 % 
 			a = parseFloat($(objLast).find("td:eq(2)").html());
 			youLastBuy = a;
 			b = parseFloat($(this).html());
@@ -205,9 +204,10 @@ $(document).ready(function(){
 				c = 100 * a/b - 100;
 				$("#youProfit").css("color", "#1d7424");
 			} else {
-				c = 100-100*b/a;
+				c = 100-100 * b/a;
 				$("#youProfit").css("color", "#c02a1d");
 			}
+			c = c * -1;
 			
 			$("#youProfit").html(c.toFixed(2) + "%");
 		} else {
@@ -222,7 +222,7 @@ $(document).ready(function(){
 LIMITER
 
 Variables:
-	- CurrentPrice  // текущий ценник
+	- CurrentPrice  // текущий ценник 
 	- SellPrice     // ценник продажи валюты, высшая ступень лестницы. [задаётся в % от CurrentPrice]
 	- StopAmount    // количество ступеней лестницы
 	- StopStep      // шаг (задаётся абсолютной величиной, или % от SellPrice, на выбор пользователя)
@@ -261,6 +261,7 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 	$(data).html("<tr><td>Amount:</td><td><input type='text' id='Amount' placeholder='Amount' value=''> <b id='AmountCash'></b></td></tr>");
 	
 	// текущий ценник
+	// Now price
 	$(data).append("<tr><td>CurrentPrice:</td><td><input type='text' id='CurrentPrice' placeholder='CurrentPrice (Click to update)' value='"+StartCurrentPrice+"'></td></tr>");
 	$(data).on('click', '#CurrentPrice', function() {
 		nowPrice = parseFloat($("#hilights .info").html());
@@ -354,11 +355,13 @@ $('.cols .col.sellCol .head').on('click', '#ShivaTradeInc_autoLimiter', function
 });
 
 // Продажа с лимитами
+// Sell with limit (not good work)
 function limiterSellSL(sellx) {
 	limiterSell(sellx, true);
 }
 
 // Продажа лесенкой
+// Build steps order
 function limiterSell(sellx, sl) {
 	
 	Amount = parseFloat($("#Amount").val());
@@ -385,8 +388,6 @@ function limiterSell(sellx, sl) {
 	orders = [];
 	
 	for(i=0; sell.stopAmount > i; i++) {
-		
-		// https://poloniex.com/private.php?currencyPair=USDT_XRP&rate=10&amount=0.56717797&command=sell
 		orders[i] = {
 			currencyPair: sell.pair, 
 			rate: (sell.sellPrice - (sell.stopStep * i)), 
@@ -415,6 +416,7 @@ function limiterSell(sellx, sl) {
 			
 			if(sl) {
 				// Лесенка лимитов
+				// Steps
 				setTimeout(PrivateAction, 1000*i, orders[i]);
 			};
 		}
