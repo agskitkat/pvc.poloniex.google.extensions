@@ -1,4 +1,23 @@
 # pvc.poloniex.google.extensions
+Poloniex Custom Browsing Plugin for Google Chrome, Opera and FireFox
+
+The Google Chrome plugin for the Poloniex website. Expands opportunities, helps in trading. Now in the state of ALPHA testing.
+I am not responsible for the actions of this plugin, <b> all operations you conduct at your own peril and risk </ b>.
+
+<H2> Install Chrome & Opera </ h2>
+
+Unzip the archive into any folder.
+
+To install in Google Chrome, go to Settings> Extensions, check the "Developer Mode" checkbox.
+
+The "Open unpacked extension" button and select the folder in which the archive was previously unpacked.
+
+<br>
+<br>
+You can support the project at BTC: <br> <b> 1HtDwJHqes7XRXNiyX2dxYhxxq4xv65Z3m </ b>
+
+
+Russion description:
 Poloniex custom view (PVC) Plugin for Google Chrome, Opera and FireFox
 
 Плагин Google Chrome для сайта биржи Poloniex. Расширяет возможности, помогает в трейде. Сейчас в состоянии ALPHA тестирования. 
