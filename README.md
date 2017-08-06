@@ -2,9 +2,9 @@
 Poloniex Custom Browsing Plugin for Google Chrome, Opera and FireFox
 
 The Google Chrome plugin for the Poloniex website. Expands opportunities, helps in trading. Now in the state of ALPHA testing.
-I am not responsible for the actions of this plugin, <b> all operations you conduct at your own peril and risk </ b>.
+I am not responsible for the actions of this plugin, <b> all operations you conduct at your own peril and risk </b>.
 
-<H2> Install Chrome & Opera </ h2>
+<h2> Install Chrome & Opera </h2>
 
 Unzip the archive into any folder.
 
