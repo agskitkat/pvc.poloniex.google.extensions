@@ -14,7 +14,7 @@ The "Open unpacked extension" button and select the folder in which the archive 
 
 <br>
 <br>
-You can support the project at BTC: <br> <b> 1HtDwJHqes7XRXNiyX2dxYhxxq4xv65Z3m </ b>
+You can support the project at BTC: <br> <b> 1HtDwJHqes7XRXNiyX2dxYhxxq4xv65Z3m </b>
 
 
 Russion description:
