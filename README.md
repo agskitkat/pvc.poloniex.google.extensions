@@ -16,8 +16,10 @@ The "Open unpacked extension" button and select the folder in which the archive 
 <br>
 You can support the project at BTC: <br> <b> 1HtDwJHqes7XRXNiyX2dxYhxxq4xv65Z3m </b>
 
+<br>
+<br>
 
-Russion description:
+<h1> Russion description:<h1>
 Poloniex custom view (PVC) Plugin for Google Chrome, Opera and FireFox
 
 Плагин Google Chrome для сайта биржи Poloniex. Расширяет возможности, помогает в трейде. Сейчас в состоянии ALPHA тестирования. 
